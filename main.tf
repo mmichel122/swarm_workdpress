@@ -5,7 +5,7 @@ resource "docker_service" "wordpress-service" {
     container_spec {
       image = "${docker_image.wordpress_image.name}"
 
-      env {
+      env = {
         database__client               = "mysql"
         database__connection__host     = "${var.mysql_network_alias}"
         database__connection__user     = "${var.wordpress_db_username}"
@@ -34,17 +34,15 @@ resource "docker_service" "mysql-service" {
     container_spec {
       image = "${docker_image.mysql_image.name}"
 
-      env {
+      env = {
         MYSQL_ROOT_PASSWORD = "${var.mysql_root_password}"
       }
 
-      mounts = [
-        {
-          target = "/var/lib/mysql"
-          source = "${docker_volume.mysql_data_volume.name}"
-          type   = "volume"
-        }
-      ]
+      mounts {
+        target = "/var/lib/mysql"
+        source = "${docker_volume.mysql_data_volume.name}"
+        type   = "volume"
+      }
     }
     networks = ["${docker_network.private_bridge_network.name}"]
   }
