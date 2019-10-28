@@ -1,11 +1,11 @@
 variable "mysql_root_password" {
   description = "The MySQL root password."
-  default     = "123456"
+  default     = "MTIzNDU2Cg=="
 }
 
 variable "mysql_user_password" {
   description = "The MySQL user password."
-  default     = "123456"
+  default     = "MTIzNDU2Cg=="
 }
 
 variable "wordpress_db_username" {

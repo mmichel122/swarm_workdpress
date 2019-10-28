@@ -5,18 +5,16 @@ resource "docker_service" "wordpress-service" {
     container_spec {
       image = "${docker_image.wordpress_image.name}"
 
-      secrets = [
-        {
-          secret_id   = "${docker_secret.mysql_db_password.id}"
-          secret_name = "${docker_secret.mysql_db_password.name}"
-          file_name   = "/run/secrets/${docker_secret.mysql_db_password.name}"
-        }
-      ]
+      secrets {
+        secret_id   = "${docker_secret.mysql_db_password.id}"
+        secret_name = "${docker_secret.mysql_db_password.name}"
+        file_name   = "/run/secrets/${docker_secret.mysql_db_password.name}"
+      }
 
       env = {
         WORDPRESS_DB_HOST   = "${var.mysql_network_alias}"
         WORDPRESS_DB_USER   = "${var.wordpress_db_username}"
-        MYSQL_PASSWORD_FILE = "/run/secrets/${docker_secret.mysql_user_password.name}"
+        MYSQL_PASSWORD_FILE = "/run/secrets/${docker_secret.mysql_db_password.name}"
         WORDPRESS_DB_NAME   = "${var.wordpress_db_name}"
       }
     }
@@ -47,23 +45,22 @@ resource "docker_service" "mysql-service" {
     container_spec {
       image = "${docker_image.mysql_image.name}"
 
-      secrets = [
-        {
-          secret_id   = "${docker_secret.mysql_root_password.id}"
-          secret_name = "${docker_secret.mysql_root_password.name}"
-          file_name   = "/run/secrets/${docker_secret.mysql_root_password.name}"
-        },
-        {
-          secret_id   = "${docker_secret.mysql_db_password.id}"
-          secret_name = "${docker_secret.mysql_db_password.name}"
-          file_name   = "/run/secrets/${docker_secret.mysql_db_password.name}"
-        }
-      ]
+      secrets {
+        secret_id   = "${docker_secret.mysql_root_password.id}"
+        secret_name = "${docker_secret.mysql_root_password.name}"
+        file_name   = "/run/secrets/${docker_secret.mysql_root_password.name}"
+      }
+
+      secrets {
+        secret_id   = "${docker_secret.mysql_db_password.id}"
+        secret_name = "${docker_secret.mysql_db_password.name}"
+        file_name   = "/run/secrets/${docker_secret.mysql_db_password.name}"
+      }
 
       env = {
         MYSQL_ROOT_PASSWORD_FILE = "/run/secrets/${docker_secret.mysql_root_password.name}"
         MYSQL_USER               = "${var.wordpress_db_username}"
-        MYSQL_PASSWORD_FILE      = "/run/secrets/${docker_secret.mysql_user_password.name}"
+        MYSQL_PASSWORD_FILE      = "/run/secrets/${docker_secret.mysql_db_password.name}"
         MYSQL_DATABASE           = "${var.wordpress_db_name}"
       }
 
