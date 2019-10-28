@@ -10,7 +10,7 @@ variable "mysql_user_password" {
 
 variable "wordpress_db_username" {
   description = "Wordpress site database username."
-  default     = "admin.db"
+  default     = "wordpress"
 }
 
 variable "wordpress_db_name" {
