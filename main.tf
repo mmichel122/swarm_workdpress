@@ -18,6 +18,12 @@ resource "docker_service" "wordpress-service" {
     ]
   }
 
+  mode {
+    replicated {
+      replicas = 2
+    }
+  }
+
   endpoint_spec {
     ports {
       target_port    = "80"
