@@ -3,9 +3,14 @@ variable "mysql_root_password" {
   default     = "Vi@stak123!"
 }
 
+variable "mysql_user_password" {
+  description = "The MySQL user password."
+  default     = "Vi@stak123!"
+}
+
 variable "wordpress_db_username" {
   description = "Wordpress site database username."
-  default     = "root"
+  default     = "admin.db"
 }
 
 variable "wordpress_db_name" {

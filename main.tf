@@ -6,11 +6,10 @@ resource "docker_service" "wordpress-service" {
       image = "${docker_image.wordpress_image.name}"
 
       env = {
-        database__client               = "mysql"
-        database__connection__host     = "${var.mysql_network_alias}"
-        database__connection__user     = "${var.wordpress_db_username}"
-        database__connection__password = "${var.mysql_root_password}"
-        database__connection__database = "${var.wordpress_db_name}"
+        WORDPRESS_DB_HOST     = "${var.mysql_network_alias}"
+        WORDPRESS_DB_USER     = "${var.wordpress_db_username}"
+        WORDPRESS_DB_PASSWORD = "${var.mysql_user_password}"
+        WORDPRESS_DB_NAME     = "${var.wordpress_db_name}"
       }
     }
     networks = [
@@ -36,6 +35,9 @@ resource "docker_service" "mysql-service" {
 
       env = {
         MYSQL_ROOT_PASSWORD = "${var.mysql_root_password}"
+        MYSQL_USER          = "${var.wordpress_db_username}"
+        MYSQL_PASSWORD      = "${var.mysql_user_password}"
+        MYSQL_DATABASE      = "${var.wordpress_db_name}"
       }
 
       mounts {
