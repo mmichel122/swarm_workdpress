@@ -5,6 +5,12 @@ resource "docker_service" "wordpress-service" {
     container_spec {
       image = "${docker_image.wordpress_image.name}"
 
+      secrets {
+        secret_id   = "${docker_secret.mysql_root_password.id}"
+        secret_name = "${docker_secret.mysql_root_password.name}"
+        file_name   = "/run/secrets/${docker_secret.mysql_root_password.name}"
+      }
+
       env = {
         WORDPRESS_DB_HOST     = "${var.mysql_network_alias}"
         WORDPRESS_DB_USER     = "${var.wordpress_db_username}"
@@ -39,11 +45,23 @@ resource "docker_service" "mysql-service" {
     container_spec {
       image = "${docker_image.mysql_image.name}"
 
+      secrets {
+        secret_id   = "${docker_secret.mysql_root_password.id}"
+        secret_name = "${docker_secret.mysql_root_password.name}"
+        file_name   = "/run/secrets/${docker_secret.mysql_root_password.name}"
+      }
+
+      secrets {
+        secret_id   = "${docker_secret.mysql_db_password.id}"
+        secret_name = "${docker_secret.mysql_db_password.name}"
+        file_name   = "/run/secrets/${docker_secret.mysql_db_password.name}"
+      }
+
       env = {
-        MYSQL_ROOT_PASSWORD = "${var.mysql_root_password}"
-        MYSQL_USER          = "${var.wordpress_db_username}"
-        MYSQL_PASSWORD      = "${var.mysql_user_password}"
-        MYSQL_DATABASE      = "${var.wordpress_db_name}"
+        MYSQL_ROOT_PASSWORD_FILE = "${var.mysql_root_password}"
+        MYSQL_USER               = "${var.wordpress_db_username}"
+        MYSQL_PASSWORD_FILE      = "${var.mysql_user_password}"
+        MYSQL_DATABASE           = "${var.wordpress_db_name}"
       }
 
       mounts {
